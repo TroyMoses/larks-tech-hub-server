@@ -40,17 +40,35 @@ router.post("/contact", (req, res) => {
   const mail = {
     from: firstName,
     to: process.env.EMAIL_USER,
-    subject: "Contact Form Submission - Portfolio",
+    subject: "Contact Form Submission - Larks Tech Hub",
     html: `<p>Name: ${firstName} ${lastName}</p>
            <p>Email: ${email}</p>
            <p>Phone: ${phone}</p>
            <p>Message: ${message}</p>`,
   };
+
+  const mail2 = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Feedback Form Recieved - Larks Tech Hub",
+    html: `<p>Hello ${firstName} ${lastName}. Thanks for reaching out to us. We will get back to you soon. Thank you for choosing Larks Tech Hub.</p>`,
+  };
+
   contactEmail.sendMail(mail, (error) => {
     if (error) {
       res.json(error);
     } else {
+      contactEmail.sendMail(mail2, (error) => {
+        if (error) {
+          res.json(error);
+        } else {
+          res.json({ code: 200, status: "Message Sent" });
+        }
+      });
       res.json({ code: 200, status: "Message Sent" });
     }
   });
+
+  
+
 });
